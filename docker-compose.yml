@@ -1,0 +1,22 @@
+services:
+  baileys:
+    build: .
+    container_name: baileys-whatsapp
+    ports:
+      - "3001:3001"
+    volumes:
+      - baileys-auth:/app/.baileys_auth
+      - baileys-data:/app/data
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/health').then(r=>{if(!r.ok)throw 1})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  baileys-auth:
+  baileys-data:
